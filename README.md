@@ -1,4 +1,9 @@
-## Welcome to GitHub Pages
+# IVIS Project
+Project work for the IVIS Information Visualization module at FHNW.
+Spring 2018
+
+
+## How to edit
 
 You can use the [editor on GitHub](https://github.com/Andreas-Keller/ivispro/edit/master/README.md) to maintain and preview the content for your website in Markdown files.
 
