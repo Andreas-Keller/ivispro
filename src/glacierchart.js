@@ -1,3 +1,52 @@
+
+var mymap = L.map('mapid').setView([46.8, 8.9], 8);
+L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
+    attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+    maxZoom: 18,
+    id: 'mapbox.streets', // alternative: mapbox.satellite
+    accessToken: 'pk.eyJ1IjoiYW5kcmVhcy1rZWxsZXIiLCJhIjoiY2pneHZrY3ZnMW0yczMycGQzMGp1YXl5aSJ9.BJhSa5Htz16Rm-st7l5QaQ'
+}).addTo(mymap);
+
+var marker = L.marker([46.8, 8.9]).addTo(mymap)
+// marker.bindPopup("<b>Hello world!</b><br>I am a popup.").openPopup();
+
+var popup = L.popup({minWidth: 400})
+
+// create svg canvas
+const canvHeight = 300, canvWidth = 400;
+var container = document.createElement("div")
+const svg = d3.select(container).append("svg")
+    .attr("width", canvWidth)
+    .attr("height", canvHeight)
+    .style("border", "1px solid");
+
+// calc the width and height depending on margins.
+const margin = {top: 50, right: 80, bottom: 50, left: 60};
+const width = canvWidth - margin.left - margin.right;
+const height = canvHeight - margin.top - margin.bottom;
+
+// create parent group and add left and top margin
+const g = svg.append("g")
+    .attr("id", "chart-area")
+    .attr("transform", "translate(" +margin.left + "," + margin.top + ")");
+
+
+d3.csv('./data/aletsch.csv', function(error, data) {
+    console.log(data)
+    g.append("text").text(data[0]['col2'])
+})
+
+function onMapClick(e) {
+    popup
+        .setLatLng(e.latlng)
+        .setContent(container)
+        .openOn(mymap);
+}
+
+marker.on('click', onMapClick);
+
+
+/*
 // create svg canvas
 const canvHeight = 600, canvWidth = 800;
 const svg = d3.select("body").append("svg")
@@ -27,7 +76,7 @@ d3.csv('./data/who-life-expectancy-by-country.csv', function(error, data) {
 
     const dataN = Object.values(dataNested[0])[1];
 
-    console.log(dataN);
+   // console.log(dataN);
 
     const lifeExpectancyDomain = d3.extent(dataN, d => Number(d.LifeExpectancyAtBirth));
 
@@ -93,3 +142,4 @@ svg.append("text")
     .attr("font-size", "26px")
     .style("text-anchor", "middle")
     .text("Life Expectancy in 2002 worldwide");
+*/
