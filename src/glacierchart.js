@@ -23,7 +23,7 @@ function newPopup(filename){
         var marker = L.marker([coordsGPS[1], coordsGPS[0]]).addTo(mymap)
 
     // create svg canvas
-        const canvHeight = 300, canvWidth = 400;
+        const canvHeight = 300, canvWidth = 500;
         var container = document.createElement("div")
         const svg = d3.select(container).append("svg")
             .attr("width", canvWidth)
@@ -31,7 +31,7 @@ function newPopup(filename){
             //.style("border", "1px solid");
 
     // calc the width and height depending on margins.
-        const margin = {top: 20, right: 60, bottom: 30, left: 40};
+        const margin = {top: 20, right: 70, bottom: 30, left: 50};
         const width = canvWidth - margin.left - margin.right + 10;
         const height = canvHeight - margin.top - margin.bottom;
 
@@ -91,12 +91,12 @@ function newPopup(filename){
             .attr("font-family", "sans-serif")
             .style("text-anchor", "middle")
             .text("Length Change (m)");
-        
+
         var data_points = g.selectAll("rect")
             .data(dataValues)
             .enter()
             .append("rect")
-            .attr("x", function(d){ return xScale(d.col2)})
+            .attr("x", function(d){ return xScale(d.col2) + 2 })
             .attr("y", function(d) { return d.col3 < 0 ? yScale(d.col3) : yScale(0) })
             .attr("height", function(d) { return d.col3 < 0 ? yScale(0) - yScale(d.col3) : yScale(d.col3) - yScale(0) })
             .attr("width", "1")
@@ -137,12 +137,19 @@ function newPopup(filename){
             .data(dataValues)
             .enter()
             .append("circle")
-            .attr("cx", function(d){ return xScale(d.col2)})
+            .attr("cx", function(d){ return xScale(d.col2) + 2})
             .attr("cy", function(d) { return y2Scale(d.col4) })
             .attr("r", "1")
-            .attr("fill", "red");
+            .attr("fill", "black");
 
-        popups[filename] = L.popup({minWidth: 400})
+        var linedata = dataValues.map(x => [xScale(x.col2) + 2, y2Scale(x.col4)])
+        var line = d3.line()
+        g.append('path')
+            .attr('d', line(linedata))
+            .attr('fill', 'none')
+            .attr('stroke', 'red')
+
+        popups[filename] = L.popup({minWidth: 500})  //change accordingly
         popups[filename].setLatLng([coordsGPS[1], coordsGPS[0]])
         popups[filename].setContent(container)
         marker.on('click', onMapClick, popups[filename]);
@@ -152,29 +159,8 @@ function newPopup(filename){
 function onMapClick(){
    this.openOn(mymap);
 }
-/*
-newPopup('./data/aletsch.csv')
-newPopup('./data/allalin.csv')
-newPopup('./data/alpetli.csv')
-newPopup('./data/ammerten.csv')
-newPopup('./data/arolla.csv')
-newPopup('./data/bellatola.csv')
-newPopup('./data/biferten.csv')
-newPopup('./data/bis.csv')
-newPopup('./data/bluemlisalp.csv')
-newPopup('./data/brunegg.csv')
-newPopup('./data/brunni.csv')
-newPopup('./data/damma.csv')
-newPopup('./data/kaltwasser.csv')
-newPopup('./data/kehlen.csv')
-newPopup('./data/kessjen.csv')
-newPopup('./data/orny.csv')
-newPopup('./data/scaletta.csv')
-newPopup('./data/morteratsch.csv')
-newPopup('./data/verstankla.csv')
-newPopup('./data/zmutt.csv')
-*/
 
+//Load the data for the popups
 d3.csv('./data/00_glaciers.csv', function(error, data){
     var glaciers = data;
     for (let i = 0; i < glaciers.length; i++ ) {
