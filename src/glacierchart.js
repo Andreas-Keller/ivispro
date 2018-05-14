@@ -31,8 +31,8 @@ function newPopup(filename){
             //.style("border", "1px solid");
 
     // calc the width and height depending on margins.
-        const margin = {top: 20, right: 20, bottom: 30, left: 30};
-        const width = canvWidth - margin.left - margin.right;
+        const margin = {top: 20, right: 60, bottom: 30, left: 40};
+        const width = canvWidth - margin.left - margin.right + 10;
         const height = canvHeight - margin.top - margin.bottom;
 
         svg.append("text")
@@ -83,6 +83,15 @@ function newPopup(filename){
         g.append("g")  // create a group and add axis
             .call(yAxis);
 
+        g.append("text")
+            .attr("transform", "rotate(-90)")
+            .attr("x", 0 - (height / 2))
+            .attr("y", 0 - margin.left)
+            .attr("dy", "1em")
+            .attr("font-family", "sans-serif")
+            .style("text-anchor", "middle")
+            .text("Length Change (m)");
+        
         var data_points = g.selectAll("rect")
             .data(dataValues)
             .enter()
@@ -91,7 +100,7 @@ function newPopup(filename){
             .attr("y", function(d) { return d.col3 < 0 ? yScale(d.col3) : yScale(0) })
             .attr("height", function(d) { return d.col3 < 0 ? yScale(0) - yScale(d.col3) : yScale(d.col3) - yScale(0) })
             .attr("width", "1")
-            .attr("stroke", "red")
+            .attr("stroke", "lightgrey")
             //.text(function(d){return d.col3+""  });
 
         var tooltip = d3.select(container).append("div").classed("tooltip", true);
@@ -108,6 +117,31 @@ function newPopup(filename){
                 tooltip.style("visibility", "hidden")
             });
 
+        var cumLengthChangeDomain = d3.extent(dataValues, d => Number(d.col4)); //.reverse();
+        const y2Scale = d3.scaleLinear()
+            .rangeRound([height,0])
+            .domain(cumLengthChangeDomain);
+        const y2Axis = d3.axisRight(y2Scale);
+        g.append("g")  // create a group and add axis
+            .attr("transform","translate(" + width + " ,0)").call(y2Axis);
+        g.append("text")
+            .attr("transform", "rotate(-90)")
+            .attr("x", 0 - (height / 2))
+            .attr("y", 0 + canvWidth - margin.right)
+            .attr("dy", "1em")
+            .attr("font-family", "sans-serif")
+            .style("text-anchor", "middle")
+            .text("Cum. Length Change (m)");
+
+        var data_points = g.selectAll("circle")
+            .data(dataValues)
+            .enter()
+            .append("circle")
+            .attr("cx", function(d){ return xScale(d.col2)})
+            .attr("cy", function(d) { return y2Scale(d.col4) })
+            .attr("r", "1")
+            .attr("fill", "red");
+
         popups[filename] = L.popup({minWidth: 400})
         popups[filename].setLatLng([coordsGPS[1], coordsGPS[0]])
         popups[filename].setContent(container)
@@ -118,7 +152,7 @@ function newPopup(filename){
 function onMapClick(){
    this.openOn(mymap);
 }
-
+/*
 newPopup('./data/aletsch.csv')
 newPopup('./data/allalin.csv')
 newPopup('./data/alpetli.csv')
@@ -139,3 +173,14 @@ newPopup('./data/scaletta.csv')
 newPopup('./data/morteratsch.csv')
 newPopup('./data/verstankla.csv')
 newPopup('./data/zmutt.csv')
+*/
+
+d3.csv('./data/00_glaciers.csv', function(error, data){
+    var glaciers = data;
+    for (let i = 0; i < glaciers.length; i++ ) {
+        newPopup('./data/' + glaciers[i].glaciername)
+    }
+})
+
+
+
