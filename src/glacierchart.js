@@ -53,7 +53,7 @@ function newPopup(filename){
 
         const dataValues = d3.values(dataOnly)
 
-        var lengthChangeDomain = d3.extent(dataValues, d => Number(d.col3)).reverse();
+        const lengthChangeDomain = d3.extent(dataValues, d => Number(d.col3)).reverse();
 
         if (lengthChangeDomain[0] < 0){
             lengthChangeDomain[0] = 0;
@@ -62,9 +62,9 @@ function newPopup(filename){
         const yearDomain = d3.extent(dataValues, d => Number(d.col2))
 
         const xScale = d3.scaleLinear()
-            .rangeRound([0,width])
+            .rangeRound([0,width-3])
             .domain(yearDomain)
-            .nice(5);
+            //.nice(5);
 
         const yScale = d3.scaleLinear()
             .rangeRound([height,0])
