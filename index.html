@@ -4,11 +4,22 @@
   <meta charset="utf-8"/>
   <link rel="stylesheet" href="/lib/leaflet/leaflet.css" />
   <style>
-      #mapid { height: 700px; }
+      #mapid {
+        height: 700px;
+        z-index: 1;
+      }
+      .toggle-btn {
+        position : absolute;
+        left : 80px;
+        top : 30px;
+        z-index: 2;
+          padding: 10px;
+          border-radius: 4px;
+      }
   </style>
 </head>
-<body>
 <!-- put your stuff here -->
+<button type="button" class="toggle-btn" onclick=toggleDisplay()>Toggle Graph</button>
 <div id="mapid"></div>
 <script src='lib/leaflet/leaflet-src.js'></script>
 <script src='lib/d3.v4.js'></script>
