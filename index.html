@@ -13,17 +13,35 @@
         left : 80px;
         top : 30px;
         z-index: 2;
-          padding: 10px;
-          border-radius: 4px;
+        padding: 10px;
+        border-radius: 4px;
+        background-color: lightblue;
       }
       .source {
         font-size: 9pt;
         font-family: "Helvetica Neue"
       }
+      .legend{
+        position: absolute;
+        right: 20px;
+        top: 30px;
+        z-index: 2;
+        background-color: white;
+        font-family: "Helvetica Neue";
+        border: 1px solid lightblue;
+        border-radius: 4px;
+        padding: 5px;
+      }
   </style>
 </head>
 <!-- put your stuff here -->
 <button type="button" class="toggle-btn" onclick=toggleDisplay()>Toggle Graph</button>
+<div class="legend">
+  <h3>Glacier Change in Switzerland</h3>
+  <div>Red Line: Cumulative Length Change</div>
+  <div>Grey Boxes: Yearly Length Change</div>
+  <div>Blue Line: Absolute Length Change</div>
+</div>
 <div id="mapid"></div>
 <div class="source">Source: Glaciological reports (1881-2017). "The Swiss Glaciers", Yearbooks of the Cryospheric Commission of the Swiss Academy of Sciences (SCNAT) published since 1964 by the Labratory of Hydraulics, Hydrology and Glaciology (VAW) of ETH Zürich. No. 1-136, (http://www.glamos.ch).</div>
 <script src='lib/leaflet/leaflet-src.js'></script>
